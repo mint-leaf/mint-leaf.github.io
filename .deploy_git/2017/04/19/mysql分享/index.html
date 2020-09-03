@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>mysql分享 · vvmint&#39;s Evdience</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/resizeApi.png" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >vvmint&#39;s Evdience</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">mysql分享</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>vvmint's Evdience</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            mysql分享
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "mysql">mysql</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.2k</span>Reading time: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/04/19</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <ul>
+<li><h2 id="作为最近在看的‘高性能-mysql‘的一个阶段性总结-感谢这本书给我带来的巨大的收获"><a href="#作为最近在看的‘高性能-mysql‘的一个阶段性总结-感谢这本书给我带来的巨大的收获" class="headerlink" title="作为最近在看的‘高性能 mysql‘的一个阶段性总结, 感谢这本书给我带来的巨大的收获"></a>作为最近在看的‘高性能 mysql‘的一个阶段性总结, 感谢这本书给我带来的巨大的收获</h2></li>
+<li><h3 id="关于怎么查看你所写的-sql-语句是否如你所愿："><a href="#关于怎么查看你所写的-sql-语句是否如你所愿：" class="headerlink" title="关于怎么查看你所写的 sql 语句是否如你所愿："></a>关于怎么查看你所写的 sql 语句是否如你所愿：</h3><p>请在写 sql 时在前面加上<code>explain</code>，查看结果，如：<code>explain select name from users where id = 2</code>你就会的到一张表格，里面有关于你这条 sql 语句所有的信息。</p>
+</li>
+<li><h3 id="关于-mysql-的范式与反范式"><a href="#关于-mysql-的范式与反范式" class="headerlink" title="关于 mysql 的范式与反范式"></a>关于 mysql 的范式与反范式</h3><ul>
+<li>第一范式： 所有的 mysql 的属性都不可再分</li>
+<li>第二范式：在第一范式的基础上建立起来的， 要求数据库中的每个实例或者行必须唯一可分，通常通过建立一个主键来实现,但优化了一些第一范式的约束条件</li>
+<li>第三范式：表的信息， 能够被推到出来，也就是我们所使用的外键</li>
+<li>反范式： 全都放进一张表格里</li>
+<li>范式优点：<ul>
+<li>更新操作快</li>
+<li>应对密集型应用的性能会很好</li>
+<li>基本没有数据冗余</li>
+<li>表通常比较小，（但现在好像不是这样了）</li>
+</ul>
+</li>
+<li>范式的缺点：<ul>
+<li>最大的缺点就是关联，常常需要关联多张表格</li>
+<li>如果多表连接查询时结果中只包含某张大表中很少的数据集时，不合理的表结构和 sql 语句会造成严重的性能问题</li>
+</ul>
+</li>
+<li>反范式的优点：<ul>
+<li>全都在一张表格里面，不用做关联</li>
+<li>易于删库跑路</li>
+</ul>
+</li>
+<li>反范式缺点：<ul>
+<li>数据全部在一张表格里面，会造成表格数据巨大</li>
+<li>会有很严重的安全问题和数据问题，而且有些涉及表锁的操作会产生巨大的影响</li>
+</ul>
+</li>
+<li>混用范式和反范式：常见的做法是使用反范式建立缓存，使用范式化或者部分范式化的（在表格中适量的添加冗余数据），使用触发器更新缓存</li>
+</ul>
+</li>
+<li><h3 id="关于-mysql-的建表："><a href="#关于-mysql-的建表：" class="headerlink" title="关于 mysql 的建表："></a>关于 mysql 的建表：</h3><p>混用范式和反范式，由于现在大多数由一张总表，数张子表，临时表构成， 所以在主表上尽可能的使用范式建表，尽可能的细化属性的颗粒大小，对于主表牵连的子表，在子表中添加一些冗余的数据列可以避免多表链接查询时牵连过多的数据列，这里添加的冗余的数据列尽量选择在代码中使用的较多的属性。将数据一致性的问题大部分交给代码逻辑进行处理 。临时表的构建使用反范式，可以更快的获得想要的结果，总之就是在多表链接，数据一致性，表格大小，易于维护性这四个方面进行均衡。</p>
+</li>
+<li><h3 id="关于-mysql-的索引："><a href="#关于-mysql-的索引：" class="headerlink" title="关于 mysql 的索引："></a>关于 mysql 的索引：</h3><ul>
+<li>索引在 Innodb 的实现：因为使用的绝大多数是 Innodb 的引擎，所以只针对 Innodb 进行讨论，索引在 Innodb 中实现使用的 B-Tree 的结构， B-Tree 是一种平衡的完全树。对于 B-Tree 来讲，索引能够使用的最左前缀，什么是索引最左前缀？举个栗子，在 test 的表里面有一个叫 combine 的索引，，这个索引由两个列构成（id, name）其中 id 是主键，那么<code>select id, name from test where name = &#39;nb&#39;</code>就不能使用到这个索引，这就是索引最左前缀的意思。再看下面的这个栗子：假设建有如下的表：<br>CREATE TABLE people (<br>last_name varchar(50) not null,<br>first_name varchar(50) not null,<br>dob date not null,<br>sex enum(‘man’, ‘woman’, ‘other’) not null,<br>key (last_name, first_name)<br>)<br>这个索引用 B-Tree 表示就是这样的:。<br>note：索引对多个值进行排序是按照建表时候定义索引的列顺序来排序的</li>
+<li>高性能索引的实现：<ul>
+<li>独立的列：独立的列的意思是索引列不能是表达式的一部分，再举个栗子： 如果在<code>id</code>上有个索引，那么在<code>where</code>中这样写的话<code>where id + 1 = 5</code>那么就不能使用到这个索引，</li>
+<li>对于比较长的列，比如类似于<code>name VARCHAR（255）</code>这样的，可以使用<code>name(12)</code>这样来建立索引列，或者再进行一次哈希，使得索引的区分度更高，什么索引的区分度，就是在指定范围内索引的重复度，比如在某个表上有一个<code>year</code>字段，而这个字段里的数据就两种<code>2015</code>，<code>2016</code>，那么如果数据量较大，在这上面建立索引并更根据这个索引查询是不明智的，可以建立一个索引<code>KEY(month, year, day)</code>来提高区分度，所以，对于查询来讲，在做<code>where</code>的条件过滤时，尽可能将区分度高的条件放在前面，</li>
+<li>索引覆盖查询：索引覆盖查询的意思就是你所要的结果列就是一个索引，那么这个查询的速度就能得到极快的提升，但是，这个及其考验整张表的结构设计和查询的写法，在<code>explain</code>所展示的框图中，索引覆盖查询的特征就是<code>Extra：Using Index</code>，但要注意的就是，对于返回的是很大的结果集的话，看不到索引的优化效果</li>
+<li>对于索引做排序：当做联结查询需要用到排序的时候，最好的结果就是排序的关键字在第一张表里面并且做排序的列是索引列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3 id="关于-Mysql-的查询优化："><a href="#关于-Mysql-的查询优化：" class="headerlink" title="关于 Mysql 的查询优化："></a>关于 Mysql 的查询优化：</h3><ul>
+<li>多表查询的坑.对于这个查询：<br>select _ from actor inner join film_actor using (actor_id)<br>inner join film using (film_id)<br>where film.tittle = “mike”<br>会返回多少数据列？答案是所有，三张表的所有数据列，因此，应该写成<code>select actor._</code></li>
+<li>查询到底做了什么：</li>
+<li>查询优化器：查询优化器是很重要的一部分。查询优化器会调整你多表查询的表的关联顺序，查询优化器和衡量你多表查询的代价从而得到最优的结果，但是如果对于很多的表的联结，就会得到可能不是很好的结果（比如十张表），因为这时候优化器会采用贪心算法进行表的顺序的组合，因此得到的可能不是最好的结果。因此只要不是关联很多的表，就可以了</li>
+<li>那么对于很多表的查询，该怎么办：第一个方法，就是重组表的结构，因为出现 6 张以上表的查询就已经很不可思议了，所以对于很多的数据限制表，可以考虑用<code>enum</code>来进行代替，第二个方法，就是合理的进行索引，这个在索引那里讲过了，第三个，就是编写合理的查询，其中的一点就是，在之前版本的 mysql 中，对于子查询的优化是很糟糕的，因此在之前版本的 mysql 中，就是推荐用关联查询代替子查询，而且，在做子查询过程中通常会建立子表或者临时表，因为子表或者临时表上是没有索引的，如果子表或者临时表很大的化，就会产生问题，最应该做的，就是在<code>ON</code>或者<code>USING</code>的列上使用索引，一般来说，除非有特定的理由，否则只需要在关联顺序的第二张表上相应的列上建立索引就够了，同时，如果涉及到<code>ORDDER BY</code>或者<code>GROUP BY</code>操作，那么，应该确保那些操作里面只涉及一个表的列。</li>
+<li>对于 limit 优化。在很多操作里面，需要我们做分页(那个 ORM 的分页可以不用管，但是像之前写的关联 10 张表的还要做分页就真的是阿西吧了)，一个很头大的问题就是偏移量很大时候，这时候可以使用预知上界进行推测的方法，举个栗子，比如你的查询里面又有一个<code>limit 2000, 4</code>那么，如果你知道这个查询是在多少范围内的数据集，那么你就可以使用<code>BETWEEN AND</code>来重写这个查询，也就是我们使用一个书签来标记我们数据集的范围</li>
+</ul>
+</li>
+<li><h3 id="写在最后："><a href="#写在最后：" class="headerlink" title="写在最后："></a>写在最后：</h3><pre><code>mysql的优化方式有很多，上面提到的哪怕是索引那部分，在整个mysql索引那一块里面也只是冰山一角，唯一的方法就是多看书，然后把自己写的每一条sql语句进行仔细的推敲，才能达到比较好的结果和自己的提升。</code></pre></li>
+</ul>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/05/06/redis%E5%9F%BA%E7%A1%80/" title= "redis基础">
+                    <div class="nextTitle">redis基础</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/03/11/%E7%AA%81%E7%84%B6%E6%83%B3%E5%86%99%E7%82%B9%E4%B8%9C%E8%A5%BF/" title= "突然想写点东西">
+                    <div class="prevTitle">突然想写点东西</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:vvmint233@gamil.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/vvmint" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/12</span><a class="archive-post-title" href= "/2020/01/12/%E8%AF%BBDDD%E7%9A%84%E6%84%9F%E6%82%9F/" >读 DDD 的感悟</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2018/07/24/%E4%B8%80%E6%9D%A1%E5%88%86%E9%A1%B5sql%E7%9A%84%E4%BC%98%E5%8C%96/" >一条分页sql的优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href= "/2018/07/02/%E6%9D%A5%E8%81%8A%E8%81%8Agolang%E4%B8%AD%E7%9A%84interface/" >来聊聊golang中的interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2018/03/22/Mysql%E4%BC%98%E5%8C%96%E4%B9%8BInnodb%E7%AF%87/" >Mysql优化之Innodb篇</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span><a class="archive-post-title" href= "/2017/11/26/redis%E5%88%9D%E7%8E%A9%E4%BD%93%E9%AA%8C/" >redis初玩体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2017/05/16/oauth%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >oauth的学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2017/05/06/redis%E5%9F%BA%E7%A1%80/" >redis基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href= "/2017/04/19/mysql%E5%88%86%E4%BA%AB/" >mysql分享</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/%E7%AA%81%E7%84%B6%E6%83%B3%E5%86%99%E7%82%B9%E4%B8%9C%E8%A5%BF/" >突然想写点东西</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/python-learning/" >python-decorator</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/mysql-learning/" >mysql数据类型优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/http2-0/" >http2-0</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2017/02/27/x%E5%92%B8%E9%B1%BC%E7%9A%84%E6%97%A5%E5%B8%B8/" >x咸鱼的日常</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="mysql"><span class="iconfont-archer">&#xe606;</span>mysql</span>
+    
+        <span class="sidebar-tag-name" data-tags="http协议"><span class="iconfont-archer">&#xe606;</span>http协议</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="中二日常"><span class="iconfont-archer">&#xe606;</span>中二日常</span>
+    
+        <span class="sidebar-tag-name" data-tags="oauth"><span class="iconfont-archer">&#xe606;</span>oauth</span>
+    
+        <span class="sidebar-tag-name" data-tags="reading"><span class="iconfont-archer">&#xe606;</span>reading</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="reading"><span class="iconfont-archer">&#xe60a;</span>reading</span>
+    
+        <span class="sidebar-category-name" data-categories="learning"><span class="iconfont-archer">&#xe60a;</span>learning</span>
+    
+        <span class="sidebar-category-name" data-categories="living"><span class="iconfont-archer">&#xe60a;</span>living</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

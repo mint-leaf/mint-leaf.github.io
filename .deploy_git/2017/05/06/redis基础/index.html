@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="John Doe">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="John Doe">
+    
+    <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    
+    <meta name="description" content="">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>redis基础 · vvmint&#39;s Evdience</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/resizeApi.png" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >vvmint&#39;s Evdience</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">redis基础</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>vvmint's Evdience</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            redis基础
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "redis">redis</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">2.1k</span>Reading time: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/05/06</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="redis-python-的一些基础操作"><a href="#redis-python-的一些基础操作" class="headerlink" title="redis-python 的一些基础操作"></a>redis-python 的一些基础操作</h1><ul>
+<li><h2 id="redis中的字符串操作指令："><a href="#redis中的字符串操作指令：" class="headerlink" title="redis中的字符串操作指令："></a>redis中的字符串操作指令：</h2><ul>
+<li><h3 id="get-：-get-key-name"><a href="#get-：-get-key-name" class="headerlink" title="get ： get(key-name)"></a>get ： get(key-name)</h3><ul>
+<li>获得key-name的值</li>
+</ul>
+</li>
+<li><h3 id="set-：-set-key-name"><a href="#set-：-set-key-name" class="headerlink" title="set ： set(key-name)"></a>set ： set(key-name)</h3><ul>
+<li>设置key-name的值</li>
+</ul>
+</li>
+<li><h3 id="incr：-incr-key-name-num"><a href="#incr：-incr-key-name-num" class="headerlink" title="incr： incr(key-name, num)"></a>incr： incr(key-name, num)</h3><ul>
+<li>实现key-name的自增操作，默认从0开始计数，</li>
+<li>如果不指定num，默认+1(s)</li>
+<li>可以指定num的值来实现加的步长值</li>
+</ul>
+</li>
+<li><h3 id="decr-decr-key-name-num"><a href="#decr-decr-key-name-num" class="headerlink" title="decr : decr(key-name, num)"></a>decr : decr(key-name, num)</h3><ul>
+<li>实现key-name的自减操作， 默认从0开始计数，</li>
+<li>其他同<code>incr</code></li>
+</ul>
+</li>
+<li><h3 id="append-append-key-name-value"><a href="#append-append-key-name-value" class="headerlink" title="append : append(key-name, value)"></a>append : append(key-name, value)</h3><ul>
+<li>将value加到key-name -&gt; value的末尾</li>
+<li>如果key-name这个键不存在，则新建这个键，值为””</li>
+<li>return len(key-name -&gt; value)</li>
+</ul>
+</li>
+<li><h3 id="getrange-getrange-key-name-start-int-end-int"><a href="#getrange-getrange-key-name-start-int-end-int" class="headerlink" title="getrange : getrange(key-name, start?int, end?int)"></a>getrange : getrange(key-name, start?int, end?int)</h3><ul>
+<li>获得key-name -&gt; value[start, end]的子串</li>
+<li>如果end&gt;length，那么只会返回[start, len(value)-1]</li>
+<li>如果end&lt;0，那么会返回key-name -&gt; value[start, len(value)+end]</li>
+</ul>
+</li>
+<li><h3 id="setrange-setrange-key-name-offset-int-value1"><a href="#setrange-setrange-key-name-offset-int-value1" class="headerlink" title="setrange : setrange(key-name, offset?int, value1)"></a>setrange : setrange(key-name, offset?int, value1)</h3><ul>
+<li>将从key-name -&gt; value[offset-1]设置成value</li>
+<li>value1可以是一个字符串</li>
+</ul>
+</li>
+<li><h3 id="getbit-getbit-key-name-offset-int"><a href="#getbit-getbit-key-name-offset-int" class="headerlink" title="getbit : getbit(key-name, offset?int)"></a>getbit : getbit(key-name, offset?int)</h3><ul>
+<li>将字符串看成二进制，返回key-name -&gt; value[offset]的二进制数值</li>
+</ul>
+</li>
+<li><h3 id="setbit-setbit-key-name-offset-int-value-0-or-1"><a href="#setbit-setbit-key-name-offset-int-value-0-or-1" class="headerlink" title="setbit : setbit(key-name, offset?int, value?(0 or 1))"></a>setbit : setbit(key-name, offset?int, value?(0 or 1))</h3><ul>
+<li>将key-name -&gt; value对应的bit-value的bit-value[offset]设置成value</li>
+<li>如果offset&gt;len,那么就会把offset到len(bit-value)前面的位设置成0</li>
+<li>对<code>set-bit</code>后的键进行<code>get</code>后，会返回bit-value对应的字符串</li>
+<li>解释bit-value的时候是按照偏移量从高到低进行解释的</li>
+</ul>
+</li>
+<li><h3 id="bitcount-bitcount-key-name-start-end"><a href="#bitcount-bitcount-key-name-start-end" class="headerlink" title="bitcount : bitcount(key-name, [start, end])"></a>bitcount : bitcount(key-name, [start, end])</h3><ul>
+<li>对key-name -&gt; bit-value进行1的数量的统计</li>
+<li>指定了start， end的话只对bit-value[start, value]的范围进行统计</li>
+<li>对于[start, end]的解释参照<code>getrange</code>的</li>
+</ul>
+</li>
+<li><h3 id="bitop-bitop-operation-func-dest-key-key-name-…"><a href="#bitop-bitop-operation-func-dest-key-key-name-…" class="headerlink" title="bitop : bitop(operation?func, dest-key, [key-name, …])"></a>bitop : bitop(operation?func, dest-key, [key-name, …])</h3><ul>
+<li>operation?func: and, or, xor, not 位运算操作</li>
+<li>对[key-name, …]里面的key-name(s) -&gt; bit-value(s) 进行<code>operation</code>对应的操作</li>
+<li>将结果保存在dest-ke</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h2 id="关于redis中的列表操作指令："><a href="#关于redis中的列表操作指令：" class="headerlink" title="关于redis中的列表操作指令："></a>关于redis中的列表操作指令：</h2><ul>
+<li><h3 id="rpush-rpush-key-name-value0-…"><a href="#rpush-rpush-key-name-value0-…" class="headerlink" title="rpush : rpush (key-name, *[value0, …])"></a>rpush : rpush (key-name, *[value0, …])</h3><ul>
+<li>将一个或者多个值从右端推入 key-name -&gt; value-list</li>
+<li>返回len</li>
+</ul>
+</li>
+<li><h3 id="lpush-lpush-key-name-value0-…"><a href="#lpush-lpush-key-name-value0-…" class="headerlink" title="lpush : lpush (key-name, *[value0, …])"></a>lpush : lpush (key-name, *[value0, …])</h3><ul>
+<li>将一个或者多个值从左端推入 key-name -&gt; value-list</li>
+<li>返回len</li>
+</ul>
+</li>
+<li><h3 id="rpop-：-rpop-key-name"><a href="#rpop-：-rpop-key-name" class="headerlink" title="rpop ： rpop (key-name)"></a>rpop ： rpop (key-name)</h3><ul>
+<li>移除并返回key-name -&gt; value-list的最右端元素</li>
+<li>当key-name -&gt; value-list为空时，返回None</li>
+</ul>
+</li>
+<li><h3 id="lpop-lpop-key-name"><a href="#lpop-lpop-key-name" class="headerlink" title="lpop : lpop (key-name)"></a>lpop : lpop (key-name)</h3><ul>
+<li>移除并返回key-name -&gt; value-list的最左端元素</li>
+</ul>
+</li>
+<li><h3 id="lindex-lindex-key-name-offset-int"><a href="#lindex-lindex-key-name-offset-int" class="headerlink" title="lindex : lindex(key-name, offset?int)"></a>lindex : lindex(key-name, offset?int)</h3><ul>
+<li>返回key-name -&gt; value-list[offset]</li>
+<li>如果offset &gt; len(value-list), 则返回None</li>
+</ul>
+</li>
+<li><h3 id="lrange-lrange-key-name-start-end"><a href="#lrange-lrange-key-name-start-end" class="headerlink" title="lrange : lrange(key-name, start, end)"></a>lrange : lrange(key-name, start, end)</h3><ul>
+<li>返回key-name -&gt; value-list[start, end]的元素，[start, end]是闭区间</li>
+</ul>
+</li>
+<li><h3 id="ltrim-：-ltrim-key-name-start-end"><a href="#ltrim-：-ltrim-key-name-start-end" class="headerlink" title="ltrim ： ltrim(key-name, start, end)"></a>ltrim ： ltrim(key-name, start, end)</h3><ul>
+<li>切片操作， 只保留key-name -&gt; value-list[start, end]的元素</li>
+<li>[start, end]是闭区间</li>
+<li>返回True/False</li>
+</ul>
+</li>
+<li><h3 id="blpop-blpop-key-name0-…-time-out"><a href="#blpop-blpop-key-name0-…-time-out" class="headerlink" title="blpop : blpop([key-name0, …], time-out):"></a>blpop : blpop([key-name0, …], time-out):</h3><ul>
+<li>从第一个非空key-name -&gt; value-list弹出最左端的元素</li>
+<li>在time-out秒内阻塞等待可弹出的元素出现</li>
+</ul>
+</li>
+<li><h3 id="brpop-brpop-key-name0-…-time-out"><a href="#brpop-brpop-key-name0-…-time-out" class="headerlink" title="brpop : brpop([key-name0, …], time-out):"></a>brpop : brpop([key-name0, …], time-out):</h3><ul>
+<li>从第一个非空key-name -&gt; value-list弹出最右端的元素</li>
+<li>在time-out秒内阻塞等待可弹出的元素出现</li>
+</ul>
+</li>
+<li><h3 id="rpoplpush-rpoplpush-source-key-dest-key"><a href="#rpoplpush-rpoplpush-source-key-dest-key" class="headerlink" title="rpoplpush : rpoplpush(source-key, dest-key)"></a>rpoplpush : rpoplpush(source-key, dest-key)</h3><ul>
+<li>从source-key -&gt; source-list 弹出位于最右端的元素并且将这个元素压入dest-key -&gt; dest-list最左端</li>
+<li>向用户返回这个元素</li>
+</ul>
+</li>
+<li><h3 id="brpoplpush-brpoplpush-source-key-dest-key-time-out"><a href="#brpoplpush-brpoplpush-source-key-dest-key-time-out" class="headerlink" title="brpoplpush : brpoplpush(source-key, dest-key, time-out)"></a>brpoplpush : brpoplpush(source-key, dest-key, time-out)</h3><ul>
+<li><code>rpoplpush</code>的阻塞模型</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><h2 id="关于redis中的集合操作指令："><a href="#关于redis中的集合操作指令：" class="headerlink" title="关于redis中的集合操作指令："></a>关于redis中的集合操作指令：</h2><ul>
+<li><h3 id="sadd-sadd-key-name-item-…"><a href="#sadd-sadd-key-name-item-…" class="headerlink" title="sadd : sadd(key-name, *[item, …])"></a>sadd : sadd(key-name, *[item, …])</h3><ul>
+<li>将一个或者多个item加入到key-name -&gt; value-set中</li>
+<li>返回原key-name -&gt; value-set不存在的元素的数量</li>
+</ul>
+</li>
+<li><h3 id="srem-srem-key-name-item-…"><a href="#srem-srem-key-name-item-…" class="headerlink" title="srem : srem(key-name, *[item, …])"></a>srem : srem(key-name, *[item, …])</h3><ul>
+<li>将一个或者多个item从key-name -&gt; value-set 中移除</li>
+<li>返回移除元素的数量</li>
+<li>如果[item, …]都不存在， 返回0</li>
+</ul>
+</li>
+<li><h3 id="sismember-sismember-key-name-item"><a href="#sismember-sismember-key-name-item" class="headerlink" title="sismember : sismember(key-name, item)"></a>sismember : sismember(key-name, item)</h3><ul>
+<li>检查item是否属于key-name -&gt; value-set</li>
+<li>return boolean</li>
+</ul>
+</li>
+<li><h3 id="scard-scard-key-name"><a href="#scard-scard-key-name" class="headerlink" title="scard : scard(key-name)"></a>scard : scard(key-name)</h3><ul>
+<li>返回key-name -&gt; value-set的数量</li>
+<li>如果key-name -&gt; value-set不存在， 返回0</li>
+</ul>
+</li>
+<li><h3 id="smembers-smembers-key-name"><a href="#smembers-smembers-key-name" class="headerlink" title="smembers : smembers(key-name)"></a>smembers : smembers(key-name)</h3><ul>
+<li>返回key-name -&gt; value-set中的所有元素</li>
+</ul>
+</li>
+<li><h3 id="srandmember-srandmember-key-name-number-None"><a href="#srandmember-srandmember-key-name-number-None" class="headerlink" title="srandmember : srandmember(key-name, number=None)"></a>srandmember : srandmember(key-name, number=None)</h3><ul>
+<li>如果number = None, 随机从key-name -&gt; value-set返回一个元素, type=str</li>
+<li>如果number &gt; 0, 那么会随机返回number个元素, type=list, 不会有重复</li>
+<li>如果number = 0, 那么会随机返回1个元素, type=str</li>
+<li>如果number &gt; 0, 那么会随机返回number个元素, type=list, 会有重复</li>
+</ul>
+</li>
+<li><h3 id="spop-spop-key-name"><a href="#spop-spop-key-name" class="headerlink" title="spop : spop(key-name)"></a>spop : spop(key-name)</h3><ul>
+<li>随机从从key-name -&gt; value-set弹出一个元素</li>
+<li>返回被移除的元素</li>
+</ul>
+</li>
+<li><h3 id="smove-smove-source-key-dest-key-item"><a href="#smove-smove-source-key-dest-key-item" class="headerlink" title="smove : smove(source-key, dest-key, item)"></a>smove : smove(source-key, dest-key, item)</h3><ul>
+<li>从source-key -&gt; source-set 中弹出元素 item 并将item加入到dest-key -&gt; dest-set中</li>
+<li>成功后返回1, 失败后返回0</li>
+</ul>
+</li>
+<li><h3 id="sdiff-sdiff-key-name0-key-name1-…"><a href="#sdiff-sdiff-key-name0-key-name1-…" class="headerlink" title="sdiff : sdiff(key-name0, *[key-name1, …])"></a>sdiff : sdiff(key-name0, *[key-name1, …])</h3><ul>
+<li>返回只存在于key-name0中的元素</li>
+<li>数学上的差集运算</li>
+</ul>
+</li>
+<li><h3 id="sdiffstore-sdiffstore-dest-key-key-name-key-name1-…"><a href="#sdiffstore-sdiffstore-dest-key-key-name-key-name1-…" class="headerlink" title="sdiffstore : sdiffstore(dest-key, key-name, *[key-name1, …])"></a>sdiffstore : sdiffstore(dest-key, key-name, *[key-name1, …])</h3><ul>
+<li>将<code>sdiff</code>的结果存储到dest-key -&gt; dest-set中</li>
+<li>返回放入dest-set的元素数量</li>
+<li>dest-set中的元素会被清空</li>
+</ul>
+</li>
+<li><h3 id="sinter-：-sinter-key-name0-key-name1-…"><a href="#sinter-：-sinter-key-name0-key-name1-…" class="headerlink" title="sinter ： sinter(key-name0, *[key-name1, …])"></a>sinter ： sinter(key-name0, *[key-name1, …])</h3><ul>
+<li>返回同时存在于key-name(s) -&gt; value-set中的元素</li>
+<li>数学上的交集运算</li>
+</ul>
+</li>
+<li><h3 id="sinterstore-：-sinterstore-dest-key-key-name0-key-name1-…"><a href="#sinterstore-：-sinterstore-dest-key-key-name0-key-name1-…" class="headerlink" title="sinterstore ： sinterstore(dest-key, key-name0, *[key-name1, …])"></a>sinterstore ： sinterstore(dest-key, key-name0, *[key-name1, …])</h3><ul>
+<li>将<code>sinter</code>的结果存储到dest-key -&gt; dest-set中</li>
+<li>其他类似于<code>sdiffstore</code></li>
+</ul>
+</li>
+<li><h3 id="sunion-：-sunion-key-name0-key-name1-…"><a href="#sunion-：-sunion-key-name0-key-name1-…" class="headerlink" title="sunion ： sunion(key-name0, *[key-name1, …])"></a>sunion ： sunion(key-name0, *[key-name1, …])</h3><ul>
+<li>返回至少存在于一个集合的元素</li>
+<li>数学上的并集运算</li>
+</ul>
+</li>
+<li><h3 id="sunionstore-：-sunionstore-dest-key-key-name0-key-name1-…"><a href="#sunionstore-：-sunionstore-dest-key-key-name0-key-name1-…" class="headerlink" title="sunionstore ： sunionstore(dest-key, key-name0, *[key-name1, …])"></a>sunionstore ： sunionstore(dest-key, key-name0, *[key-name1, …])</h3><ul>
+<li>将<code>sunion</code>的结果存储到dest-key -&gt; dest-set中</li>
+<li>其他类似于<code>sdiffstore</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><h2 id="关于redis中的散列操作指令："><a href="#关于redis中的散列操作指令：" class="headerlink" title="关于redis中的散列操作指令："></a>关于redis中的散列操作指令：</h2><ul>
+<li><h3 id="hmset-hmset-key-name-key1-value1-…"><a href="#hmset-hmset-key-name-key1-value1-…" class="headerlink" title="hmset : hmset(key-name, {key1:value1, …})"></a>hmset : hmset(key-name, {key1:value1, …})</h3><ul>
+<li>为key-name -&gt; value-hash 添加键值对</li>
+<li>返回True/False</li>
+</ul>
+</li>
+<li><h3 id="hmget-hmget-key-name-key1-…"><a href="#hmget-hmget-key-name-key1-…" class="headerlink" title="hmget : hmget(key-name, [key1, …])"></a>hmget : hmget(key-name, [key1, …])</h3><ul>
+<li>从key-name -&gt; value-hash 返回[key1, …]对应的[value1, …]</li>
+<li>返回的Type=list</li>
+<li>如果在[key1, …]存在key-name -&gt; value-hash不存在的key, 那么返回None</li>
+</ul>
+</li>
+<li><h3 id="hdel-hdel-key-name-key1-…"><a href="#hdel-hdel-key-name-key1-…" class="headerlink" title="hdel : hdel(key-name, [key1, …])"></a>hdel : hdel(key-name, [key1, …])</h3><ul>
+<li>删除key-name -&gt; value-hash 中[key1, …]对应的[value1, …]</li>
+<li>返回成功找到并删除的key：value的数量</li>
+</ul>
+</li>
+<li><h3 id="hlen-hlen-key-name"><a href="#hlen-hlen-key-name" class="headerlink" title="hlen : hlen(key-name)"></a>hlen : hlen(key-name)</h3><ul>
+<li>返回key-name -&gt; value-hash中键值对的数量</li>
+</ul>
+</li>
+<li><h3 id="hexists-hexist-key-name-key"><a href="#hexists-hexist-key-name-key" class="headerlink" title="hexists : hexist(key-name, key)"></a>hexists : hexist(key-name, key)</h3><ul>
+<li>检查key是否存在于key-name -&gt; value-hash中</li>
+<li>return true/false</li>
+</ul>
+</li>
+<li><h3 id="hkeys-hkeys-key-name"><a href="#hkeys-hkeys-key-name" class="headerlink" title="hkeys : hkeys(key-name)"></a>hkeys : hkeys(key-name)</h3><ul>
+<li>返回key-name -&gt; value-hash的所有键</li>
+<li>type=list</li>
+</ul>
+</li>
+<li><h3 id="hvalues-hvalues-key-name"><a href="#hvalues-hvalues-key-name" class="headerlink" title="hvalues : hvalues(key-name)"></a>hvalues : hvalues(key-name)</h3><ul>
+<li>返回key-name -&gt; value-hash的所有值</li>
+<li>type=list</li>
+</ul>
+</li>
+<li><h3 id="hgetall-hgetall-key-name"><a href="#hgetall-hgetall-key-name" class="headerlink" title="hgetall : hgetall(key-name)"></a>hgetall : hgetall(key-name)</h3><ul>
+<li>返回key-name -&gt; value-hash的所有键值对</li>
+</ul>
+</li>
+<li><h3 id="hincrby-hincrby-key-name-key-incrment"><a href="#hincrby-hincrby-key-name-key-incrment" class="headerlink" title="hincrby : hincrby(key-name, key, incrment)"></a>hincrby : hincrby(key-name, key, incrment)</h3><ul>
+<li>将key-name -&gt; value-hash[key] 加上incrment</li>
+<li>返回key -&gt; value + incrment, type=long</li>
+</ul>
+</li>
+<li><h3 id="hincrbyfloat-hincrbyfloat-key-name-key-float"><a href="#hincrbyfloat-hincrbyfloat-key-name-key-float" class="headerlink" title="hincrbyfloat : hincrbyfloat(key-name, key, float)"></a>hincrbyfloat : hincrbyfloat(key-name, key, float)</h3><ul>
+<li>将key-name -&gt; value-hash[key] 加上float</li>
+<li>返回key -&gt; value + float, type=float</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><h2 id="关于redis中的有序集合-zset-操作指令："><a href="#关于redis中的有序集合-zset-操作指令：" class="headerlink" title="关于redis中的有序集合(zset)操作指令："></a>关于redis中的有序集合(zset)操作指令：</h2><ul>
+<li><h3 id="zadd-zadd-key-name-member-score-float-…-推荐使用"><a href="#zadd-zadd-key-name-member-score-float-…-推荐使用" class="headerlink" title="zadd : zadd(key-name, **{member: score?float, …})[推荐使用]"></a>zadd : zadd(key-name, **{member: score?float, …})[推荐使用]</h3><ul>
+<li>将带有给定score的member加入到key-name -&gt; value-set中</li>
+<li>返回加入到key-name -&gt; value-zset 的数量</li>
+<li>除了<code>**{member: score?float, ...}</code>， 还可以使用<code>*[member0, score0?float, ...]</code></li>
+</ul>
+</li>
+<li><h3 id="zrem-zrem-key-name-member0-…"><a href="#zrem-zrem-key-name-member0-…" class="headerlink" title="zrem : zrem(key-name, *[member0, …])"></a>zrem : zrem(key-name, *[member0, …])</h3><ul>
+<li>从key-name -&gt; value-zset中移除 *[member0, …]</li>
+<li>返回被移除成员的数量</li>
+</ul>
+</li>
+<li><h3 id="zcard-zcard-key-name"><a href="#zcard-zcard-key-name" class="headerlink" title="zcard : zcard(key-name)"></a>zcard : zcard(key-name)</h3><ul>
+<li>返回key-name -&gt; value-zset的成员数量</li>
+</ul>
+</li>
+<li><h3 id="zincrby-zincrby-key-name-member-incrment"><a href="#zincrby-zincrby-key-name-member-incrment" class="headerlink" title="zincrby : zincrby(key-name, member, incrment)"></a>zincrby : zincrby(key-name, member, incrment)</h3><ul>
+<li>将key-name -&gt; value-zset 的member的分值加上incrment</li>
+<li>在redis-cli的交互模式中， 是<code>zincrby(key-name, incrment, member)</code></li>
+<li>返回member -&gt; score + incrment, type=float</li>
+</ul>
+</li>
+<li><h3 id="zcount-zcount-key-name-min-max"><a href="#zcount-zcount-key-name-min-max" class="headerlink" title="zcount : zcount(key-name, min, max)"></a>zcount : zcount(key-name, min, max)</h3><ul>
+<li>返回分值介于min， max之间的成员数量</li>
+</ul>
+</li>
+<li><h3 id="zrank-zrank-key-name-member"><a href="#zrank-zrank-key-name-member" class="headerlink" title="zrank : zrank(key-name, member)"></a>zrank : zrank(key-name, member)</h3><ul>
+<li>返回member在key-name -&gt; value-zset的排名</li>
+<li>如果member不存在， 返回None</li>
+</ul>
+</li>
+<li><h3 id="zscore-zscore-key-name-member"><a href="#zscore-zscore-key-name-member" class="headerlink" title="zscore : zscore(key-name, member)"></a>zscore : zscore(key-name, member)</h3><ul>
+<li>返回key-name -&gt; value-zset 中member的分数</li>
+<li>如果member不存在， 返回None</li>
+</ul>
+</li>
+<li><h3 id="zrange-zrange-key-name-strat-end-withscores-False"><a href="#zrange-zrange-key-name-strat-end-withscores-False" class="headerlink" title="zrange : zrange(key-name, strat, end, withscores=False)"></a>zrange : zrange(key-name, strat, end, withscores=False)</h3><ul>
+<li>返回排名介于start和end之间的成员, type=list, element=member</li>
+<li>start和end的规则参照之前的</li>
+<li>如果withscores=True， 那么element=(member, score)</li>
+</ul>
+</li>
+<li><h3 id="zrevrank-zrevrank-key-name-member"><a href="#zrevrank-zrevrank-key-name-member" class="headerlink" title="zrevrank : zrevrank(key-name, member)"></a>zrevrank : zrevrank(key-name, member)</h3><ul>
+<li>返回member在key-name -&gt; value-zset的逆序排名</li>
+<li>逆序是指score的desc顺序</li>
+</ul>
+</li>
+<li><h3 id="zrevrange-zrevrange-key-name-strat-end-withscores-False"><a href="#zrevrange-zrevrange-key-name-strat-end-withscores-False" class="headerlink" title="zrevrange : zrevrange(key-name, strat, end, withscores=False)"></a>zrevrange : zrevrange(key-name, strat, end, withscores=False)</h3><ul>
+<li><code>zrange</code>的逆序操作</li>
+</ul>
+</li>
+<li><h3 id="zrangebyscore-zrangebyscore-key-min-max-withscores-False-score-cast-func-func"><a href="#zrangebyscore-zrangebyscore-key-min-max-withscores-False-score-cast-func-func" class="headerlink" title="zrangebyscore : zrangebyscore(key, min, max, withscores=False, score_cast_func?func)"></a>zrangebyscore : zrangebyscore(key, min, max, withscores=False, score_cast_func?func)</h3><ul>
+<li>返回分值介于 min 和 max 之间的元素</li>
+<li>score_cast_func?func可以用lambda表达式</li>
+</ul>
+</li>
+<li><h3 id="zrevrangebyscore-zrangebyscore-key-min-max-withscores-False-score-cast-func-func"><a href="#zrevrangebyscore-zrangebyscore-key-min-max-withscores-False-score-cast-func-func" class="headerlink" title="zrevrangebyscore : zrangebyscore(key, min, max, withscores=False, score_cast_func?func)"></a>zrevrangebyscore : zrangebyscore(key, min, max, withscores=False, score_cast_func?func)</h3><ul>
+<li><code>zrangebyscore</code>的逆序操作</li>
+</ul>
+</li>
+<li><h3 id="zremrangebyrank-zremrangebyrank-key-name-start-end"><a href="#zremrangebyrank-zremrangebyrank-key-name-start-end" class="headerlink" title="zremrangebyrank : zremrangebyrank(key-name, start, end)"></a>zremrangebyrank : zremrangebyrank(key-name, start, end)</h3><ul>
+<li>移除key-name -&gt; value-zset中排名介于start和end之间的元素</li>
+<li>start和end是闭集</li>
+<li>返回移除的元素数量</li>
+</ul>
+</li>
+<li><h3 id="zremrangebyscore-zremrangebyscore-key-name-min-max"><a href="#zremrangebyscore-zremrangebyscore-key-name-min-max" class="headerlink" title="zremrangebyscore : zremrangebyscore(key-name, min, max)"></a>zremrangebyscore : zremrangebyscore(key-name, min, max)</h3><ul>
+<li>移除key-name -&gt; value-zset中分数介于min和max之间的元素</li>
+<li>min和max是闭集</li>
+<li>返回移除元素的数量</li>
+</ul>
+</li>
+<li><h3 id="zinterstore-zinterstore-dest-key-key-name0-…-aggregate-func"><a href="#zinterstore-zinterstore-dest-key-key-name0-…-aggregate-func" class="headerlink" title="zinterstore : zinterstore(dest-key, [key-name0, …], [aggregate?func])"></a>zinterstore : zinterstore(dest-key, [key-name0, …], [aggregate?func])</h3><ul>
+<li>对于给定的[key-name0, …]实现类似于集合的交集运算， 结果放于dest-key中</li>
+<li>aggregate?func 可选sum|min|max 函数</li>
+<li>默认使用sum运算， 将[key-name0, …]中共同member的score相加，得到dest-key -&gt; zset-dest中member的score</li>
+<li>min|max的功能以此类推</li>
+</ul>
+</li>
+<li><h3 id="zunionstore-zunionstore-dest-key-key-name0-…-aggregate-func"><a href="#zunionstore-zunionstore-dest-key-key-name0-…-aggregate-func" class="headerlink" title="zunionstore : zunionstore(dest-key, [key-name0, …], [aggregate?func])"></a>zunionstore : zunionstore(dest-key, [key-name0, …], [aggregate?func])</h3><ul>
+<li>对于给定的[key-name0, …]实现类似于集合的并集运算， 结果放于dest-key中</li>
+<li>其余类似于<code>zinterstore</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </article>
+    <!-- license  -->
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/05/16/oauth%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title= "oauth的学习笔记">
+                    <div class="nextTitle">oauth的学习笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/04/19/mysql%E5%88%86%E4%BA%AB/" title= "mysql分享">
+                    <div class="prevTitle">mysql分享</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:vvmint233@gamil.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/vvmint" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/12</span><a class="archive-post-title" href= "/2020/01/12/%E8%AF%BBDDD%E7%9A%84%E6%84%9F%E6%82%9F/" >读 DDD 的感悟</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/24</span><a class="archive-post-title" href= "/2018/07/24/%E4%B8%80%E6%9D%A1%E5%88%86%E9%A1%B5sql%E7%9A%84%E4%BC%98%E5%8C%96/" >一条分页sql的优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span><a class="archive-post-title" href= "/2018/07/02/%E6%9D%A5%E8%81%8A%E8%81%8Agolang%E4%B8%AD%E7%9A%84interface/" >来聊聊golang中的interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/2018/03/22/Mysql%E4%BC%98%E5%8C%96%E4%B9%8BInnodb%E7%AF%87/" >Mysql优化之Innodb篇</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span><a class="archive-post-title" href= "/2017/11/26/redis%E5%88%9D%E7%8E%A9%E4%BD%93%E9%AA%8C/" >redis初玩体验</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span><a class="archive-post-title" href= "/2017/05/16/oauth%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >oauth的学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span><a class="archive-post-title" href= "/2017/05/06/redis%E5%9F%BA%E7%A1%80/" >redis基础</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/19</span><a class="archive-post-title" href= "/2017/04/19/mysql%E5%88%86%E4%BA%AB/" >mysql分享</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/%E7%AA%81%E7%84%B6%E6%83%B3%E5%86%99%E7%82%B9%E4%B8%9C%E8%A5%BF/" >突然想写点东西</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/python-learning/" >python-decorator</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/mysql-learning/" >mysql数据类型优化</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/11</span><a class="archive-post-title" href= "/2017/03/11/http2-0/" >http2-0</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/27</span><a class="archive-post-title" href= "/2017/02/27/x%E5%92%B8%E9%B1%BC%E7%9A%84%E6%97%A5%E5%B8%B8/" >x咸鱼的日常</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="mysql"><span class="iconfont-archer">&#xe606;</span>mysql</span>
+    
+        <span class="sidebar-tag-name" data-tags="http协议"><span class="iconfont-archer">&#xe606;</span>http协议</span>
+    
+        <span class="sidebar-tag-name" data-tags="redis"><span class="iconfont-archer">&#xe606;</span>redis</span>
+    
+        <span class="sidebar-tag-name" data-tags="中二日常"><span class="iconfont-archer">&#xe606;</span>中二日常</span>
+    
+        <span class="sidebar-tag-name" data-tags="oauth"><span class="iconfont-archer">&#xe606;</span>oauth</span>
+    
+        <span class="sidebar-tag-name" data-tags="reading"><span class="iconfont-archer">&#xe606;</span>reading</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="reading"><span class="iconfont-archer">&#xe60a;</span>reading</span>
+    
+        <span class="sidebar-category-name" data-categories="learning"><span class="iconfont-archer">&#xe60a;</span>learning</span>
+    
+        <span class="sidebar-category-name" data-categories="living"><span class="iconfont-archer">&#xe60a;</span>living</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "John Doe"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
